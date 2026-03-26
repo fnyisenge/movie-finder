@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events Finder</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+    <header>
+        <h1>Movie Finder</h1>
+        <p>Search millions of movies and find your next watch</p>
+    </header>
+    <main>
+        <section class="search-panel">
+            <form id="searchForm">
+                <div class="form-row">
+                    <div class="form-group main-input">
+                        <label for="query"> Movie Title <span class="required">*</span></label>
+                        <input type="text" id="query" placeholder="e.g Inception, blacklist, The night agent" required>
+                    </div>
+                </div>
+                <div class="form-row filters">
+                    <div class="form-group">
+                        <label for="year">Release Year</label>
+                        <input type="text" id="year" placeholder="e.g 2023">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sort">Sort by</label>
+                        <select id="sort">
+                            <option value="">Best match</option>
+                            <option value="popularity">Popularity</option>
+                            <option value="rating">Highest Rated</option>
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" id="searchBtn">Magic</button>
+            </form>
+        </section>
+
+        <section id="statusBar" class="status-bar hidden"></section>
+        <section id="results" class="results-grid"></section>
+    </main>
+    <footer>
+        <p>Powered by <a href="https://www.themoviesdb.org" target="_blank">TDM Api</a></p>
+    </footer>
+    <script src="./script.js"></script>
+</body>
+
+</html>
