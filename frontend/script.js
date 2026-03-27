@@ -50,19 +50,17 @@ const renderMovies = (movies) => {
     .map(
       (m) => `
     <div class="movie-card">
-      ${
-        m.poster
-          ? `<img src="${escapeHtml(m.poster)}" alt="${escapeHtml(m.title)}" loading="lazy" />`
-          : `<div class="no-poster">🎬</div>`
-      }
+      <div class="poster-wrap">
+        ${
+          m.poster
+            ? `<img src="${escapeHtml(m.poster)}" alt="${escapeHtml(m.title)}" loading="lazy" />`
+            : `<div class="no-poster">🎬</div>`
+        }
+        ${m.rating ? `<div class="rating-badge">★ ${m.rating}</div>` : ""}
+      </div>
       <div class="card-body">
         <h2 class="card-title">${escapeHtml(m.title)}</h2>
-        <div class="card-meta">
-          <span class="year">${formatYear(m.releaseDate)}</span>
-          <span class="rating" title="${m.rating}/10 (${m.voteCount} votes)">
-            ${starRating(m.rating)} ${m.rating}
-          </span>
-        </div>
+        <div class="card-year">${formatYear(m.releaseDate)}</div>
         <p class="card-overview">${escapeHtml(m.overview)}</p>
       </div>
       <a class="card-link" href="${escapeHtml(m.tmdbUrl)}" target="_blank" rel="noopener noreferrer">
@@ -99,7 +97,7 @@ form.addEventListener("submit", async (e) => {
   if (year) params.append("year", year);
 
   try {
-    const res = await fetch(`http://localhost:3000/api/movies?${params}`);
+    const res = await fetch(`http://localhost:3002/api/movies?${params}`);
     const data = await res.json();
 
     if (!res.ok) {

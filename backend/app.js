@@ -1,9 +1,18 @@
 const express = require("express");
 const path = require("path");
+const rateLimit = require("express-rate-limit");
 require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests. Please wait a moment and try again." },
+});
 
 app.use(express.static(path.join(__dirname, "../frontend")));
 
@@ -12,7 +21,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/api/movies", async (req, res) => {
+app.get("/api/movies", limiter, async (req, res) => {
   const { query, year, sort } = req.query;
 
   if (!query || !query.trim()) {
@@ -78,5 +87,5 @@ app.get("/api/movies", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port http://localhost:${PORT}`);
 });
