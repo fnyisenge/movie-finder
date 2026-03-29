@@ -97,7 +97,7 @@ form.addEventListener("submit", async (e) => {
   if (year) params.append("year", year);
 
   try {
-    const res = await fetch(`http://localhost:3002/api/movies?${params}`);
+    const res = await fetch(`/api/movies?${params}`);
     const data = await res.json();
 
     if (!res.ok) {
