@@ -1,139 +1,83 @@
-# MovieFinder — Backend
+MovieFinder
 
-A lightweight Node.js/Express server that acts as a secure proxy between the MovieFinder frontend and the [TMDB API](https://www.themoviedb.org/documentation/api). It handles API key management, request validation, rate limiting, and result sorting — keeping all sensitive credentials off the client.
+MovieFinder is a web application designed to help users quickly discover movies without wasting time searching across multiple platforms. It provides clean, organized results and filtering options, making it easier for users to decide what to watch.
 
----
+Features
 
-## Features
+Search movies by title
+Filter by release year
+Sort results (popularity, rating, newest, oldest)
+Secure API integration (API key hidden on backend)
+Rate limiting (20 requests/minute)
+Error handling for invalid inputs and API failures
 
-- **Movie search** — queries the TMDB search API by title, with optional year filtering
-- **Server-side sorting** — sort results by popularity, rating, release date (newest or oldest)
-- **Rate limiting** — 20 requests per minute per client to prevent abuse
-- **Static file serving** — serves the frontend directly, so no separate web server is needed
-- **Environment-based config** — API key and port are loaded from a `.env` file, never exposed to the browser
+Tech Stack
 
----
+Node.js / Express
+HTML, CSS, JavaScript
+Nginx (reverse proxy & load balancer)
+PM2
 
-## Tech Stack
+Local Setup
 
-| Package | Purpose |
-|---|---|
-| [Express 5](https://expressjs.com/) | HTTP server and routing |
-| [express-rate-limit](https://github.com/express-rate-limit/express-rate-limit) | Per-IP rate limiting |
-| [dotenv](https://github.com/motdotla/dotenv) | Environment variable loading |
-| [nodemon](https://nodemon.io/) | Auto-restart during development |
-
----
-
-## Getting Started
-
-### PrerequisitesPORT=3002
-TMDB_API_KEY=5a5350d65b8242e76a9da1c9d557bfc2
-
-- Node.js 18+
-- A free [TMDB API key](https://www.themoviedb.org/settings/api)
-
-### Installation
-
-```bash
+git clone https://github.com/fnyisenge/movie-finder.git
 cd backend
 npm install
-```
 
-### Configuration
+Created a .env file:
 
-Create a `.env` file in the `backend/` directory:
+Run the app:
 
-```env
-PORT=3002
-TMDB_API_KEY=your_tmdb_api_key_here
-```
-
-> **Never commit your `.env` file.** It is already listed in `.gitignore`.
-
-### Running
-
-```bash
-# Development (auto-restarts on file changes)
 npm run dev
 
-# Production
+# or
+
 node app.js
-```
 
-The server starts on the port defined in `.env` (default: `3000`).
-The frontend is served at `http://localhost:<PORT>/`.
+Access:
 
----
+http://localhost:3002
 
-## API Reference
+API Endpoint
 
-### `GET /api/movies`
+GET /api/movies
 
-Search for movies by title.
+Query parameters:
 
-**Query Parameters**
+query (required)
+year (optional)
+sort (popularity, rating, newest, oldest)
 
-| Parameter | Type | Required | Description |
-|---|---|---|---|
-| `query` | string | Yes | Movie title to search for |
-| `year` | string | No | Filter by release year (e.g. `2023`) |
-| `sort` | string | No | Sort order: `popularity`, `rating`, `newest`, `oldest` |
+Deployment
 
-**Success Response — `200 OK`**
+Web01 & Web02
 
-```json
-{
-  "total": 3,
-  "movies": [
-    {
-      "id": 27205,
-      "title": "Inception",
-      "overview": "Cobb, a skilled thief...",
-      "releaseDate": "2010-07-16",
-      "rating": "8.4",
-      "voteCount": 35821,
-      "poster": "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg",
-      "tmdbUrl": "https://www.themoviedb.org/movie/27205"
-    }
-  ]
-}
-```
+Installed Node.js, Nginx, and Git
+Cloned the repository and installed dependencies
+Created .env file with API key
+Ran the app using PM2
+Configured Nginx as a reverse proxy to the Node.js app
 
-**Error Responses**
+Load Balancer (Lb01)
 
-| Status | Condition |
-|---|---|
-| `400 Bad Request` | `query` parameter is missing or empty |
-| `500 Internal Server Error` | `TMDB_API_KEY` is not set, or an unexpected server error occurred |
-| `502 Bad Gateway` | TMDB API returned an error |
-| `429 Too Many Requests` | Rate limit exceeded (20 req/min) |
+Configured Nginx with an upstream block pointing to Web01 and Web02
+Set up proxy to distribute traffic between both servers
+Restarted Nginx to apply changes
 
----
+Testing
 
-## Project Structure
+The application was accessed through the load balancer IP.
+Multiple refresh requests confirmed that traffic is distributed between Web01 and Web02, ensuring scalability and reliability.
 
-```
-backend/
-├── app.js          # Entry point — Express app, routes, middleware
-├── package.json
-├── .env            # Secret config (not committed)
-└── .gitignore
-```
+Data Source
 
----
+Movie data is provided by TMDB:
+https://www.themoviedb.org
 
-## Rate Limiting
-
-The `/api/movies` endpoint is limited to **20 requests per minute** per IP address. Clients that exceed this limit receive a `429` response with the message:
-
-```json
-{ "error": "Too many requests. Please wait a moment and try again." }
-```
-
----
-
-## Data Source
-
-Movie data is provided by [The Movie Database (TMDB)](https://www.themoviedb.org).
 This product uses the TMDB API but is not endorsed or certified by TMDB.
+
+Notes
+
+API keys are stored securely in .env
+.env is excluded from version control
+All code is original
