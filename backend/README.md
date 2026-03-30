@@ -29,9 +29,7 @@ Created a .env file:
 Run the app:
 
 npm run dev
-
-# or
-
+or
 node app.js
 
 Access:
